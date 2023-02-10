@@ -10,7 +10,7 @@
 
   <section> 
     <div class="payment">
-        <div class="item_name">Название:{{ item.name }}</div>
+        <div class="item_name" id="item_name_">Название:{{ item.name }}</div>
         <div class="item_description">Описание: {{ item.description }}</div>
         <div class="item_price" id="price">Цена: {{ item.price }}</div>
         <div class="item_currency" id="currency">Оплата в валюте: {{ item.currency }}</div>
@@ -33,13 +33,23 @@
   p.addEventListener("change", convert)
 
   async function getSessionToRedirect() {
+      let current = document.getElementById('currency').innerText.split(':')[1].replace(/\s/g, '')
+      let price = document.getElementById('price').innerHTML.split(':')[1].replace(/\s/g, '')
+      let name = document.getElementById('item_name_').innerText
+
       const response = await fetch(`{% url 'create-session-get-session' %}`, {
         method: "POST",
         headers: {
             'X-CSRFToken': csrftoken,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({month: 1})
+        body: JSON.stringify({
+          amount: Math.floor(price),
+          currency: current,
+          name_product: name,
+          quantity: 1
+
+        })
       })
       const session = await response.json()
       const result =  await stripe.redirectToCheckout({ sessionId: session.id });

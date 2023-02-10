@@ -6,6 +6,7 @@ class Item(models.Model):
     name = models.CharField(max_length=63)
     description = models.TextField()
     price = models.FloatField(validators=[MinValueValidator(0.1)])
+    currency = models.ForeignKey("Currency", on_delete=models.PROTECT)
 
 
 class Order(models.Model):
@@ -15,7 +16,9 @@ class Order(models.Model):
 
 
 class Discount(models.Model):
-    discount_percentage = models.IntegerField(validators=[MinValueValidator(1)])
+    discount_percentage = models.IntegerField(
+        validators=[MinValueValidator(1)], unique=True
+    )
 
 
 class Tax(models.Model):
@@ -23,3 +26,10 @@ class Tax(models.Model):
     tax_percentage = models.IntegerField(
         validators=[MaxValueValidator(100), MinValueValidator(1)]
     )
+
+
+class Currency(models.Model):
+    currency_name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.currency_name.upper()

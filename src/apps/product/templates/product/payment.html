@@ -1,0 +1,72 @@
+{% extends 'product/index.html' %}
+{% load static %}
+{% block title %}Оплата{% endblock %}
+
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
+<div class="container">
+
+  <section> 
+    <div class="payment">
+        <div class="item_name">Название:{{ item.name }}</div>
+        <div class="item_description">Описание: {{ item.description }}</div>
+        <div class="item_price" id="price">Цена: {{ item.price }}</div>
+        <div class="item_currency" id="currency">Оплата в валюте: {{ item.currency }}</div>
+        {{ currency_form }}
+        <button id="buy-button">Купить</button>
+
+        {% csrf_token %}
+    </div>
+  </section>
+</div>
+
+<script type="text/javascript">
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+
+  const checkoutButton = document.getElementById("buy-button");
+  checkoutButton.addEventListener("click", getSessionToRedirect)
+
+  let p = document.getElementById("to_current")
+  p.addEventListener("change", convert)
+
+  async function getSessionToRedirect() {
+      const response = await fetch(`{% url 'create-session-get-session' %}`, {
+        method: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({month: 1})
+      })
+      const session = await response.json()
+      const result =  await stripe.redirectToCheckout({ sessionId: session.id });
+
+      if (result.error) {
+        alert(result.error.message)
+      }
+  }
+
+
+    async function convert() {
+        let now_current = document.getElementById('currency')
+        let n_current = now_current.innerText.split(':')[1].replace(/\s/g, '')
+
+        let to_current_element = document.getElementById('to_current')
+        let to_current = to_current_element.options[to_current_element.selectedIndex].text;
+        let price = document.getElementById('price')
+        let n_price = price.innerHTML.split(':')[1].replace(/\s/g, '')
+
+
+        let resonse = await fetch(`https://api.exchangerate-api.com/v4/latest/${n_current}`)
+        data = await resonse.json()
+        let new_price  = data.rates[to_current] * Number(n_price)
+
+        now_current.innerHTML = `Оплата в валюте: ${to_current}`
+        price.innerHTML = `Цена: ${new_price}`
+
+    }
+</script>
+{% endblock %}

@@ -10,6 +10,8 @@ class Item(models.Model):
 
 
 class Order(models.Model):
+    name = models.CharField(max_length=63)
+    description = models.TextField()
     items = models.ManyToManyField(Item)
     discount = models.ForeignKey("Discount", on_delete=models.PROTECT, null=True)
     tax = models.ForeignKey("Tax", on_delete=models.PROTECT)

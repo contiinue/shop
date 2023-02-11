@@ -13,7 +13,9 @@ class PaymentData:
     price: int
 
 
-def create_session(amount: int, currency: str, name_product: str, quantity: int = 1) -> stripe.checkout.Session:
+def create_session(
+    amount: int, currency: str, name_product: str, quantity: int = 1
+) -> stripe.checkout.Session:
     checkout_session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[

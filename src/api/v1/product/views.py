@@ -13,7 +13,6 @@ class CreateSessionView(ViewSet):
     @action(methods=["post"], detail=False)
     def get_session(self, request):
         serializer = CreateSessionSerializer(data=request.data)
-        print(request.data)
         serializer.is_valid(raise_exception=True)
         session = create_session(**serializer.validated_data)
         return Response(data={"id": session.id}, status=status.HTTP_303_SEE_OTHER)

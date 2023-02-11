@@ -1,0 +1,29 @@
+{% extends 'product/index.html' %}
+{% load static %}
+{% block title %}Оплата{% endblock %}
+
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
+<div class="container">
+  <div class="stripe_pk" id="stripe_pk" hidden>{{ STRIPE_PUBLIC_KEY }}</div>
+  <section> 
+    <div class="payment">
+        <div class="item_name" id="item_name_">Название:{{ order.name }}</div>
+        <div class="item_description">Описание: {{ order.description }}</div>
+        <div class="item_price" id="price">Цена: {{ order.amount }} </div>
+        <div class="item_discount" id="discount">Скидка: {{ order.discount.discount_percentage }}% </div>
+        <div class="item_tax" id="tax">Налог: {{ order.tax.tax_percentage }}% </div>
+        <div class="item_quantity" id="quantity">Количесво товаров: {% if order.quantity %} {{ order.quantity }} {% else %} 1 {% endif %}</div>
+        <div class="item_currency" id="currency">Оплата в валюте: {{ currency }}</div>
+        {{ currency_form }}
+        <button id="buy-button">Купить</button>
+        {% csrf_token %}
+
+        
+    </div>
+  </section>
+</div>
+<script tupe='text/javascript' src="{% static 'product/js/session_stripe.js' %}"></script>
+{% endblock %}

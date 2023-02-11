@@ -1,5 +1,6 @@
 from django import forms
-from .models import Item, Order, Discount, Tax, Currency
+
+from .models import Currency, Discount, Item, Order, Tax
 
 
 class ItemForm(forms.ModelForm):

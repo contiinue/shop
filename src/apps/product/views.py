@@ -1,7 +1,8 @@
-from django.db.models import Count, Sum, F
+from django.db.models import Count, F, Sum
 from django.views.generic import DetailView, TemplateView
 
 from config.settings import STRIPE_PUBLIC_KEY
+
 from .forms import CurrencyForm
 from .models import Item, Order
 

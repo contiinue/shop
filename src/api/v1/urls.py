@@ -1,4 +1,3 @@
-from django.urls import path, include
-
+from django.urls import include, path
 
 urlpatterns = [path("", include("api.v1.product.urls"))]

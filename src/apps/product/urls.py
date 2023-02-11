@@ -1,5 +1,6 @@
-from django.urls import path, include
-from .views import ItemView, SuccessPayment, CancelPayment, OrderView
+from django.urls import include, path
+
+from .views import CancelPayment, ItemView, OrderView, SuccessPayment
 
 urlpatterns = [
     path("item/<int:pk>", ItemView.as_view()),

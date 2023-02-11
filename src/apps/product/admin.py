@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from .models import Item, Order, Discount, Tax, Currency
-from .forms import ItemForm, OrderForm, DiscountForm, TaxForm, CurrencyFormAdmin
+from .forms import CurrencyFormAdmin, DiscountForm, ItemForm, OrderForm, TaxForm
+from .models import Currency, Discount, Item, Order, Tax
 
 
 @admin.register(Item)
